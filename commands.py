@@ -65,7 +65,7 @@ def callback_inline(call):
 
     century = call.data
     if century in chess_history:
-        
+
         history_text = ""
         for topic, description in chess_history[century]:
             history_text += f"*{topic}*\n{description}\n\n"
@@ -81,9 +81,173 @@ def callback_inline(call):
 # def solutions(message):
 #     bot.send_message(message.chat.id, 'Write the puzzle number')
 
+
+def split_text(text, max_length=4096):
+    chunks = []
+    while len(text) > max_length:
+        split_index = text.rfind('\n', 0, max_length)
+        if split_index == -1:
+            split_index = max_length
+        chunks.append(text[:split_index])
+        text = text[split_index:]
+    chunks.append(text)
+    return chunks
+
 @bot.message_handler(commands=['books'])
 def books(message):
-    bot.send_message(message.chat.id, 'список лучших шахматных книг на 24 год и их описание')
+    chess_books_text = """
+    1. Title: My System
+    Author: Aron Nimzowitsch
+    Description: This influential book introduces fundamental concepts of positional play, including pawn structures, prophylaxis, overprotection, and the blockading of passed pawns.
+    Target Audience: Intermediate to advanced players
+
+    2. Title: The Life and Games of Mikhail Tal
+    Author: Mikhail Tal
+    Description: A blend of autobiography and detailed analysis of games by the eighth World Chess Champion, known for his tactical brilliance and aggressive style.
+    Target Audience: All levels, though intermediate and advanced players will benefit most
+
+    3. Title: Chess Fundamentals
+    Author: José Raúl Capablanca
+    Description: A classic work focusing on essential chess principles such as simple tactics, endgames, and positional play, written by the third World Chess Champion.
+    Target Audience: Beginners to intermediate players
+
+    4. Title: Silman's Complete Endgame Course
+    Author: Jeremy Silman
+    Description: A comprehensive guide to endgames, organized by rating level to teach players the most essential endgame principles as they progress.
+    Target Audience: Beginners to advanced players
+
+    5. Title: Thinking, Fast and Slow
+    Author: Daniel Kahneman
+    Description: Not specifically a chess book, but highly recommended for understanding decision-making, mental biases, and managing risk, which are crucial skills in chess.
+    Target Audience: Intermediate to advanced players
+
+    6. Title: 100 Endgames You Must Know
+    Author: Jesús de la Villa
+    Description: Focuses on 100 essential endgames that every chess player must know, making it a highly relevant resource for practical improvement.
+    Target Audience: Intermediate players, though advanced players will also benefit
+
+    7. Title: How to Reassess Your Chess
+    Author: Jeremy Silman
+    Description: Teaches players how to recognize and capitalize on positional imbalances, helping them think like a master.
+    Target Audience: Intermediate to advanced players
+
+    8. Title: Zurich International Chess Tournament, 1953
+    Author: David Bronstein
+    Description: A detailed account of one of the most famous chess tournaments, with insights and annotated games from the world's top players, including future world champions.
+    Target Audience: Advanced players and those aspiring to master-level play
+
+    9. Title: Bobby Fischer Teaches Chess
+    Author: Bobby Fischer
+    Description: A beginner-friendly book structured as a series of puzzles, focusing on tactics and checkmate patterns.
+    Target Audience: Beginners to intermediate players
+
+    10. Title: Mastering Chess Strategy
+    Author: Johan Hellsten
+    Description: A comprehensive guide on strategy, covering piece coordination, weak squares, pawn structures, and other core strategic themes.
+    Target Audience: Intermediate to advanced players
+
+    11. Title: Attacking Chess: The King’s Indian
+    Author: David Vigorito
+    Description: A deep dive into the King’s Indian Defense, presenting modern ideas and analysis for players looking to master this aggressive opening.
+    Target Audience: Advanced players or players interested in the King's Indian Defense
+
+    12. Title: Secrets of Modern Chess Strategy: Advances Since Nimzowitsch
+    Author: John Watson
+    Description: Explores how modern chess strategy has evolved from Nimzowitsch's ideas, focusing on flexibility in principles such as center control and pawn structures.
+    Target Audience: Advanced players and chess enthusiasts
+
+    13. Title: Chess Structures: A Grandmaster Guide
+    Author: Mauricio Flores Rios
+    Description: A guide focused on pawn structures and their influence on chess strategy, providing practical advice for different formations.
+    Target Audience: Intermediate to advanced players
+
+    14. Title: The Art of Attack in Chess
+    Author: Vladimir Vuković
+    Description: A classic on attacking play, covering tactics, sacrifices, and strategic ideas that help players become more aggressive and dynamic.
+    Target Audience: Intermediate to advanced players
+    """
+
+    chunks = split_text(chess_books_text)
+    for chunk in chunks:
+        bot.send_message(message.chat.id, chunk)
+
+
+# @bot.message_handler(commands=['books'])
+# def books(message):
+
+#     chess_books_text = """
+#     1. Title: My System
+#     Author: Aron Nimzowitsch
+#     Description: This influential book introduces fundamental concepts of positional play, including pawn structures, prophylaxis, overprotection, and the blockading of passed pawns.
+#     Target Audience: Intermediate to advanced players
+
+#     2. Title: The Life and Games of Mikhail Tal
+#     Author: Mikhail Tal
+#     Description: A blend of autobiography and detailed analysis of games by the eighth World Chess Champion, known for his tactical brilliance and aggressive style.
+#     Target Audience: All levels, though intermediate and advanced players will benefit most
+
+#     3. Title: Chess Fundamentals
+#     Author: José Raúl Capablanca
+#     Description: A classic work focusing on essential chess principles such as simple tactics, endgames, and positional play, written by the third World Chess Champion.
+#     Target Audience: Beginners to intermediate players
+
+#     4. Title: Silman's Complete Endgame Course
+#     Author: Jeremy Silman
+#     Description: A comprehensive guide to endgames, organized by rating level to teach players the most essential endgame principles as they progress.
+#     Target Audience: Beginners to advanced players
+
+#     5. Title: Thinking, Fast and Slow
+#     Author: Daniel Kahneman
+#     Description: Not specifically a chess book, but highly recommended for understanding decision-making, mental biases, and managing risk, which are crucial skills in chess.
+#     Target Audience: Intermediate to advanced players
+
+#     6. Title: 100 Endgames You Must Know
+#     Author: Jesús de la Villa
+#     Description: Focuses on 100 essential endgames that every chess player must know, making it a highly relevant resource for practical improvement.
+#     Target Audience: Intermediate players, though advanced players will also benefit
+
+#     7. Title: How to Reassess Your Chess
+#     Author: Jeremy Silman
+#     Description: Teaches players how to recognize and capitalize on positional imbalances, helping them think like a master.
+#     Target Audience: Intermediate to advanced players
+
+#     8. Title: Zurich International Chess Tournament, 1953
+#     Author: David Bronstein
+#     Description: A detailed account of one of the most famous chess tournaments, with insights and annotated games from the world's top players, including future world champions.
+#     Target Audience: Advanced players and those aspiring to master-level play
+
+#     9. Title: Bobby Fischer Teaches Chess
+#     Author: Bobby Fischer
+#     Description: A beginner-friendly book structured as a series of puzzles, focusing on tactics and checkmate patterns.
+#     Target Audience: Beginners to intermediate players
+
+#     10. Title: Mastering Chess Strategy
+#     Author: Johan Hellsten
+#     Description: A comprehensive guide on strategy, covering piece coordination, weak squares, pawn structures, and other core strategic themes.
+#     Target Audience: Intermediate to advanced players
+
+#     11. Title: Attacking Chess: The King’s Indian
+#     Author: David Vigorito
+#     Description: A deep dive into the King’s Indian Defense, presenting modern ideas and analysis for players looking to master this aggressive opening.
+#     Target Audience: Advanced players or players interested in the King's Indian Defense
+
+#     12. Title: Secrets of Modern Chess Strategy: Advances Since Nimzowitsch
+#     Author: John Watson
+#     Description: Explores how modern chess strategy has evolved from Nimzowitsch's ideas, focusing on flexibility in principles such as center control and pawn structures.
+#     Target Audience: Advanced players and chess enthusiasts
+
+#     13. Title: Chess Structures: A Grandmaster Guide
+#     Author: Mauricio Flores Rios
+#     Description: A guide focused on pawn structures and their influence on chess strategy, providing practical advice for different formations.
+#     Target Audience: Intermediate to advanced players
+
+#     14. Title: The Art of Attack in Chess
+#     Author: Vladimir Vuković
+#     Description: A classic on attacking play, covering tactics, sacrifices, and strategic ideas that help players become more aggressive and dynamic.
+#     Target Audience: Intermediate to advanced players
+#     """
+
+#     bot.send_message(message.chat.id, chess_books_text)
 
 @bot.message_handler(commands=['games'])
 def games(message):
