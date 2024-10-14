@@ -1,5 +1,6 @@
 import telebot
 from telebot import types
+import random
 
 # token
 bot = telebot.TeleBot('8025279344:AAEr6dt_MU8rKCbrjAWs610rrZ_AM9Cy5Os')
@@ -408,4 +409,32 @@ def rec(message):
     
     bot.send_message(message.chat.id, recs)
 
+@bot.message_handler(commands=['quotes'])
+def quotes(message):
+
+    quote = [
+        "Garry Kasparov:\n\nChess is a game of mistakes. The one who makes the least mistakes is the winner.",
+        "Garry Kasparov:\n\nIt is not enough to be a good player; you must also have the mental strength to win.",
+        "Anatoly Karpov:\n\nChess is everything: art, science, and sport.",
+        "Anatoly Karpov:\n\nThe main thing is to have a good day. If you play your best, the result will take care of itself.",
+        "Bobby Fischer:\n\nChess is life.",
+        "Bobby Fischer:\n\nAll that matters on the chessboard is good moves.",
+        "Magnus Carlsen:\n\nI think chess players are the most unappreciated athletes in the world.",
+        "Magnus Carlsen:\n\nI always believe that when you’re playing against someone, it’s more about your own game than about your opponent.",
+        "Vladimir Kramnik:\\nnThe most important thing is to keep your head cool.",
+        "Vladimir Kramnik:\n\nIn chess, as in life, the best way to win is to avoid losing.",
+        "Mikhail Tal:\n\nI have always believed that the best way to improve is to play as many games as possible.",
+        "Mikhail Tal:\n\nThe most beautiful thing about chess is that it can be played in the mind.",
+        "José Raúl Capablanca:\n\nIn chess, as in life, opportunity strikes but once.",
+        "José Raúl Capablanca:\n\nThe most important thing is to be able to think independently.",
+        "Hikaru Nakamura:\n\nYou have to take risks in order to win. That's the nature of chess.",
+        "Hikaru Nakamura:\n\nChess is like a war on a chessboard. The goal is to destroy your opponent's king.",
+        "Judit Polgar:\n\nThere is no such thing as an easy opponent. Every opponent is strong.",
+        "Judit Polgar:\n\nYou have to believe in yourself when you play chess."
+    ]
+
+    rand_quote = random.choice(quote)
+    bot.send_message(message.chat.id, rand_quote)
+
 bot.polling(non_stop=True)
+
