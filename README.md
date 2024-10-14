@@ -11,8 +11,9 @@
 9. словарь шахматных терминов
 10. великии цитаты гроссмейстеров (выбор гроссмейстера) ✔️
 
-/games - Grandmaster games to choose from
-/books - The best chess books of the moment
-/puzzles - Chess puzzles of three difficulties
-/history - A Brief History of Chess Divided by Century
-/recommendations - Recommendations for chess beginners
+games - Grandmaster games to choose from
+books - The best chess books of the moment
+puzzles - Chess puzzles of three difficulties
+history - A Brief History of Chess Divided by Century
+recommendations - Recommendations for chess beginners
+quotes - Sending random quote from grandmasters

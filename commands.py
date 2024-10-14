@@ -421,7 +421,7 @@ def quotes(message):
         "Bobby Fischer:\n\nAll that matters on the chessboard is good moves.",
         "Magnus Carlsen:\n\nI think chess players are the most unappreciated athletes in the world.",
         "Magnus Carlsen:\n\nI always believe that when you’re playing against someone, it’s more about your own game than about your opponent.",
-        "Vladimir Kramnik:\\nnThe most important thing is to keep your head cool.",
+        "Vladimir Kramnik:\n\nThe most important thing is to keep your head cool.",
         "Vladimir Kramnik:\n\nIn chess, as in life, the best way to win is to avoid losing.",
         "Mikhail Tal:\n\nI have always believed that the best way to improve is to play as many games as possible.",
         "Mikhail Tal:\n\nThe most beautiful thing about chess is that it can be played in the mind.",
@@ -436,5 +436,174 @@ def quotes(message):
     rand_quote = random.choice(quote)
     bot.send_message(message.chat.id, rand_quote)
 
-bot.polling(non_stop=True)
+@bot.message_handler(commands=['dictionary'])
+def dic(message):
+    terms = {
+        'A': [
+            "**Algebraic Notation**: A method of recording and describing moves in chess using letters and numbers to indicate pieces and squares.",
+            "",
+            "**Ambush**: A tactic where a piece appears to be inactive but can suddenly attack when the opportunity arises.",
+            "",
+            "**Analyze**: To study a position or a game to understand strengths, weaknesses, and possible improvements.",
+            "",
+            "**Annotation**: Notes made on a game or position explaining the ideas behind certain moves."
+        ],
+        'B': [
+            "**Back Rank**: The row of squares on the player's first rank, often referring to the danger of checkmate on that rank.",
+            "",
+            "**Bishop**: A piece that moves diagonally any number of squares.",
+            "",
+            "**Blunder**: A significant mistake that can lead to a loss of material or position.",
+            "",
+            "**Book Move**: A move that is part of established opening theory."
+        ],
+        'C': [
+            "**Check**: A situation where a king is under direct attack and must be moved out of attack on the next turn.",
+            "",
+            "**Checkmate**: A position in which the king is in check and has no legal moves to escape, resulting in the end of the game.",
+            "",
+            "**Challenger**: A player who contests the title or position of another player.",
+            "",
+            "**Counterattack**: An immediate response to an opponent's threat or attack."
+        ],
+        'D': [
+            "**Defense**: A strategy to prevent an opponent from gaining an advantage.",
+            "",
+            "**Draw**: A result of the game where neither player wins. This can happen through stalemate, insufficient material, or mutual agreement.",
+            "",
+            "**D4**: The pawn move to the d4 square, often seen in openings like the Queen's Pawn Game."
+        ],
+        'E': [
+            "**Endgame**: The final phase of the game where few pieces remain on the board, and the focus is on promoting pawns and checkmating the opponent.",
+            "",
+            "**En Passant**: A special pawn capture that can occur immediately after a pawn moves two squares forward from its starting position, allowing an adjacent opponent's pawn to capture it as if it had only moved one square.",
+            "",
+            "**Equal**: A term used to describe a position that is balanced, with neither side having a significant advantage."
+        ],
+        'F': [
+            "**Fianchetto**: A pawn structure where a bishop is developed to the second rank of the adjacent pawn (e.g., g2 or b2).",
+            "",
+            "**Fork**: A tactic where a single piece attacks two or more of the opponent's pieces simultaneously."
+        ],
+        'G': [
+            "**Gambit**: A chess opening in which a player sacrifices material, usually a pawn, for an advantage in position or development.",
+            "",
+            "**Grandmaster (GM)**: A title awarded by FIDE, representing one of the highest levels of chess expertise."
+        ],
+        'H': [
+            "**Half-Open File**: A file with one player’s pawns and the opponent’s pawns missing, allowing for potential attacks along that file.",
+            "",
+            "**Hanging Piece**: A piece that is unprotected and can be captured without consequence."
+        ],
+        'I': [
+            "**Initiative**: The ability to make threats and dictate the pace of the game, often leading to an advantage.",
+            "",
+            "**Isolated Pawn**: A pawn that has no friendly pawns on adjacent files, making it a potential weakness."
+        ],
+        'J': [
+            "**Judgment**: The ability to evaluate positions and make decisions based on strategic understanding."
+        ],
+        'K': [
+            "**King**: The most crucial piece in chess; the game ends if a king is checkmated.",
+            "",
+            "**Kf3**: Notation for moving the king to the f3 square.",
+            "",
+            "**King's Pawn Opening**: A common opening move for white (1.e4) that controls the center."
+        ],
+        'L': [
+            "**Lateral Move**: A movement where a piece moves horizontally or vertically, typically referring to the rook or queen.",
+            "",
+            "**Ligature**: A tactical move that leads to a series of forced moves."
+        ],
+        'M': [
+            "**Mate**: Short for checkmate, indicating the end of the game.",
+            "",
+            "**Middle Game**: The phase of the game between the opening and endgame, where players develop their pieces and formulate plans.",
+            "",
+            "**Minor Pieces**: Refers to bishops and knights, as opposed to major pieces (rooks and queens)."
+        ],
+        'N': [
+            "**Notation**: The method of recording moves in a game, often in algebraic or descriptive format.",
+            "",
+            "**Knight**: A piece that moves in an L-shape: two squares in one direction and one square perpendicular."
+        ],
+        'O': [
+            "**Opening**: The initial phase of the game, characterized by specific moves aimed at developing pieces and controlling the center.",
+            "",
+            "**Outpost**: A square that is controlled by a piece, particularly a knight, that cannot be attacked by pawns."
+        ],
+        'P': [
+            "**Pawn**: The most numerous piece on the board, moving forward one square (or two from its starting position) and capturing diagonally.",
+            "",
+            "**Promotion**: The process of upgrading a pawn to a more powerful piece (usually a queen) when it reaches the opposite side of the board.",
+            "",
+            "**Pincered Piece**: A piece that is attacked by two enemy pieces at the same time, making it difficult for the opponent to defend it."
+        ],
+        'Q': [
+            "**Queen**: The most powerful piece, capable of moving any number of squares in any direction.",
+            "",
+            "**Queen's Gambit**: A popular opening that begins with 1.d4 d5 2.c4."
+        ],
+        'R': [
+            "**Rook**: A piece that moves horizontally or vertically any number of squares.",
+            "",
+            "**Rotating**: The act of changing the position of pieces or altering the pawn structure."
+        ],
+        'S': [
+            "**Stalemate**: A situation in which one player has no legal moves and their king is not in check, resulting in a draw.",
+            "",
+            "**Sacrifice**: The act of giving up material (usually a piece) for a strategic advantage.",
+            "",
+            "**Skewer**: A tactical move where a more valuable piece is attacked, forcing it to move and exposing a less valuable piece behind it."
+        ],
+        'T': [
+            "**Tactic**: A short-term sequence of moves that leads to a gain of material or a better position.",
+            "",
+            "**Tempo**: A term used to describe a turn or move; losing tempo means giving the opponent an advantage in time."
+        ],
+        'U': [
+            "**Undermine**: A tactic aimed at attacking the pawn structure of an opponent, weakening their position.",
+            "",
+            "**Underpromotion**: Promoting a pawn to a piece other than a queen, usually a knight or rook, for tactical reasons."
+        ],
+        'V': [
+            "**Vincent's Defense**: A specific defensive strategy against a particular opening or attack.",
+            "",
+            "**Visualization**: The ability to mentally picture moves and positions without looking at the board."
+        ],
+        'W': [
+            "**Weak Square**: A square that cannot be defended by pawns, making it vulnerable to attack.",
+            "",
+            "**Winning Plan**: A strategic sequence of moves that aims to convert an advantage into a victory."
+        ],
+        'X': [
+            "**X-ray**: A tactic where a piece attacks an opponent’s piece through another piece, often used with rooks or queens."
+        ],
+        'Y': [
+            "**Yardstick**: A term used informally to measure progress or evaluate a player's performance."
+        ],
+        'Z': [
+            "**Zugzwang**: A situation where a player is forced to make a move that puts them at a disadvantage, typically occurring in endgames."
+        ]
+    }
 
+    # Ask user for the letter
+    bot.send_message(message.chat.id, "Please enter a letter (A-Z) to get the chess terms:")
+
+    # Use a state to capture the user's response
+    @bot.message_handler(func=lambda m: True)
+    def info(message):
+        letter = message.text.upper()  # Convert to uppercase for consistency
+        if letter in terms:
+            # Format response
+            response = f"**Terms for '{letter}':**\n\n\n" + "\n".join(terms[letter])
+            bot.send_message(message.chat.id, response, parse_mode='Markdown')
+        else:
+            bot.send_message(message.chat.id, "Invalid letter. Please enter a letter (A-Z).")
+
+        # Optionally, you can remove this handler after the first valid response
+        bot.remove_message_handler(info)
+
+
+
+bot.polling(non_stop=True)
