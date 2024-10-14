@@ -355,4 +355,57 @@ def history(message):
 #         # Send the history of the selected century
 #         bot.send_message(call.message.chat.id, history_text, parse_mode='Markdown')
 
+@bot.message_handler(commands=['recommendations'])
+def rec(message):
+    recs = """
+    Getting started with chess can be both exciting and a bit daunting! Here are some recommendations to help you ease into the game:
+
+    1. Learn the Basics
+       - Chessboard Setup: Familiarize yourself with the board layout, the names of the pieces, and how each piece moves.
+       - Basic Rules: Understand the rules of chess, including how to check, checkmate, and stalemate.
+       - Special Moves: Learn about castling, en passant, and pawn promotion.
+
+    2. Opening Principles
+       - Control the Center: Focus on controlling the center squares (e4, e5, d4, d5) as they offer better mobility for your pieces.
+       - Develop Your Pieces: Aim to get your knights and bishops out early, preferably to squares where they control the center.
+       - King Safety: Don’t forget to castle early to protect your king and connect your rooks.
+
+    3. Practice Tactics
+       - Tactics Training: Use online resources or apps that offer tactical puzzles. This helps improve your pattern recognition.
+       - Common Tactics: Familiarize yourself with basic tactics like forks, pins, skewers, and discovered attacks.
+
+    4. Play Regularly
+       - Online Platforms: Sign up on websites like Chess.com, Lichess.org, or PlayMagnus.com to play against others or against the computer.
+       - Join a Club: Look for local chess clubs or online communities to find opponents and gain experience.
+
+    5. Study Simple Endgames
+       - Basic Endgames: Learn key endgame principles and simple checkmating patterns (like King and Queen vs. King, King and Rook vs. King).
+       - King and Pawn Endgames: Understand how to convert a pawn advantage into a win.
+
+    6. Watch and Learn
+       - Videos and Streams: Follow chess channels on YouTube or Twitch where you can watch games, tutorials, and analysis.
+       - Famous Games: Study classic games played by grandmasters to learn strategies and tactics in action.
+
+    7. Analyze Your Games
+       - Post-Game Review: After playing, review your games to understand what went well and where you could improve.
+       - Use Analysis Tools: Online platforms often provide analysis tools that can highlight mistakes and suggest better moves.
+
+    8. Read Chess Books
+       - Beginner Books: Consider starting with books like:
+         - "Bobby Fischer Teaches Chess" by Bobby Fischer
+         - "The Steps Method" by Roberta and Peter Schaeffer
+         - "Chess for Kids" by Michael Basman
+
+    9. Set Goals
+       - Short-Term Goals: Set achievable goals, like improving your rating by a certain number of points or learning a specific opening.
+       - Long-Term Goals: Consider aiming to participate in a local tournament when you feel ready.
+
+    10. Have Fun!
+       - Remember to enjoy the game! Chess is as much about enjoying the process of learning and playing as it is about winning.
+
+    By following these recommendations, you'll build a solid foundation in chess. Happy playing!
+    """
+    
+    bot.send_message(message.chat.id, recs)
+
 bot.polling(non_stop=True)
