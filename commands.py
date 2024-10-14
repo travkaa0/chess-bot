@@ -57,12 +57,6 @@ def callback_inline(call):
         bot.send_message(call.message.chat.id, 'Write a number from 11 to 20.')
     elif call.data == 'hard':
         bot.send_message(call.message.chat.id, 'Write a number from 21 to 30.')
-    elif call.data == 'magnus':
-        bot.send_message(call.message.chat.id, 'список ссылок и названия партий')
-    elif call.data == 'bobby':
-        bot.send_message(call.message.chat.id, 'список ссылок и названия партий')
-    elif call.data == 'lasker':
-        bot.send_message(call.message.chat.id, 'список ссылок и названия партий')
 
     century = call.data
     if century in chess_history:
@@ -255,12 +249,22 @@ def games(message):
     
     markup = types.InlineKeyboardMarkup()
     
-    btn1 = types.InlineKeyboardButton('Magnus Carlsen', callback_data='magnus')
-    btn2 = types.InlineKeyboardButton('Bobby Fischer', callback_data='bobby')
-    btn3 = types.InlineKeyboardButton('Emanuel Lasker', callback_data='lasker')
+    btn1 = types.InlineKeyboardButton('Magnus Carlsen', url='https://www.chess.com/games/magnus-carlsen')
+    btn2 = types.InlineKeyboardButton('Bobby Fischer', url='https://www.chess.com/games/bobby-fischer')
+    btn3 = types.InlineKeyboardButton('Emanuel Lasker', url='https://www.chess.com/games/emanuel-lasker')
+    btn4 = types.InlineKeyboardButton('Garry Kasparov', url='https://www.chess.com/games/garry-kasparov')
+    btn5 = types.InlineKeyboardButton('José Raúl Capablanca', url='https://www.chess.com/games/jose-raul-capablanca')
+    btn6 = types.InlineKeyboardButton('Mikhail Tal', url='https://www.chess.com/games/mikhail-tal')
+    btn7 = types.InlineKeyboardButton('Hikaru Nakamura', url='https://www.chess.com/games/hikaru-nakamura')
+    btn8 = types.InlineKeyboardButton('Paul Morphy', url='https://www.chess.com/games/paul-morphy')
+    btn9 = types.InlineKeyboardButton('Mikhail Botvinnik', url='https://www.chess.com/games/mikhail-botvinnik')
 
     markup.row(btn1)
     markup.row(btn2, btn3)
+    markup.row(btn4)
+    markup.row(btn5, btn6)
+    markup.row(btn7)
+    markup.row(btn8, btn9)
 
     bot.send_message(message.chat.id, "Which grandmaster's game will you choose?", reply_markup=markup)
 
@@ -604,6 +608,101 @@ def dic(message):
         # Optionally, you can remove this handler after the first valid response
         bot.remove_message_handler(info)
 
+@bot.message_handler(commands=['learning'])
+def learn(message):
+    markup = types.InlineKeyboardMarkup()
+    
+    btn1 = types.InlineKeyboardButton('Opening Principles', url='https://www.youtube.com/watch?v=8IlJ3v8I4Z8&list=PLEU2htGGqTT_dNgPztXTf6Ze7crT_PUxk')
+    btn2 = types.InlineKeyboardButton('Practice Tactics', url='https://www.youtube.com/watch?v=D3uEIk9_RYg&list=PLEU2htGGqTT-9aaVFXTYzAfyKM15zyyme')
+    btn3 = types.InlineKeyboardButton('Simple Endgames', url='https://www.youtube.com/watch?v=mCsc24k-Q8M&list=PLEU2htGGqTT_nX4Bfz-a9NdCybfh1Q8AD')
+    btn4 = types.InlineKeyboardButton('Game Analysis', url='https://www.youtube.com/watch?v=ylpAHvPlafc&list=PLEU2htGGqTT8sunIJuMRODQ62i3YQtQwa')
 
+    markup.row(btn1)
+    markup.row(btn2, btn3)
+    markup.row(btn4)
+
+    bot.send_message(message.chat.id, "What do you want to learn first?", reply_markup=markup)
+
+learn = {
+    "Chess Pieces & Setup": """
+    **Pieces**: 
+    - King (♔): Moves one square in any direction.
+    - Queen (♕): Moves any number of squares in any direction.
+    - Rook (♖): Moves horizontally or vertically.
+    - Bishop (♗): Moves diagonally.
+    - Knight (♘): Moves in an "L" shape.
+    - Pawn (♙): Moves forward but captures diagonally.
+
+    **Setup**: 
+    - Place the rooks in the corners, knights next to them, then bishops, queen on her color, and the king beside her.
+    - Pawns on the second row for each side.
+    """,
+    
+    "How the Pieces Move": """
+    **King**: Moves one square in any direction.
+    **Queen**: Moves any number of squares vertically, horizontally, or diagonally.
+    **Rook**: Moves any number of squares horizontally or vertically.
+    **Bishop**: Moves diagonally any number of squares.
+    **Knight**: Moves in an L-shape and can jump over pieces.
+    **Pawn**: Moves forward one square, captures diagonally.
+    """,
+
+    "Basic Rules": """
+    **Objective**: Checkmate the opponent's king.
+    **Check**: When a king is under threat and must be protected.
+    **Checkmate**: When the king is in check and cannot escape.
+    **Stalemate**: A draw occurs when a player cannot make a legal move but is not in check.
+    """,
+
+    "Special Moves": """
+    **Castling**: Move the king two squares towards a rook, then move the rook next to the king. Conditions apply.
+    **En Passant**: Special pawn capture when a pawn moves two squares forward.
+    **Pawn Promotion**: When a pawn reaches the 8th rank, it can become a queen, rook, bishop, or knight.
+    """,
+
+    "Winning Conditions": """
+    **Checkmate**: The most common way to win.
+    **Resignation**: A player can concede at any time.
+    **Stalemate**: A draw if no legal moves are available and the player isn't in check.
+    **Threefold Repetition**: A draw if the same position occurs three times.
+    **50-Move Rule**: A draw if no pawn has moved and no piece has been captured in 50 moves.
+    """,
+
+    "Opening Principles": """
+    **Control the Center**: Move pawns and pieces to control the center.
+    **Develop Your Pieces**: Move knights and bishops early.
+    **King Safety**: Castle early to protect your king.
+    """,
+
+    "Tactics": """
+    **Fork**: One piece attacks two enemy pieces.
+    **Pin**: A piece is immobilized to protect a more valuable piece behind it.
+    **Skewer**: A more valuable piece is attacked, forcing it to move, exposing a weaker piece behind it.
+    **Discovered Attack**: Moving one piece reveals an attack from another.
+    """,
+
+    "Endgame Principles": """
+    **Activate the King**: In the endgame, the king becomes powerful.
+    **Push Passed Pawns**: Promote pawns to win.
+    **Opposition**: In king and pawn endgames, opposition is key.
+    """,
+
+    "Common Mistakes to Avoid": """
+    - Moving the same piece multiple times in the opening.
+    - Neglecting King Safety.
+    - Not controlling the center.
+    """,
+
+    "Practice Puzzles": """
+    **Puzzle 1**: Find the checkmate in one move.
+    """,
+
+    "Chess Notation": """
+    **Algebraic Notation**: 
+    - Files: a-h (columns).
+    - Ranks: 1-8 (rows).
+    **Example Move**: e4 means moving the pawn to the e4 square.
+    """
+}
 
 bot.polling(non_stop=True)
