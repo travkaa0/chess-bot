@@ -623,9 +623,11 @@ def learn(message):
 
     bot.send_message(message.chat.id, "What do you want to learn first?", reply_markup=markup)
 
-learn = {
-    "Chess Pieces & Setup": """
-    **Pieces**: 
+basic = {
+    "Start": "You can choose one of 11 topics to study. For greater compactness, the topics will be indicated when you click on the buttons",
+
+    "Topic 1": """
+    **Chess Pieces & Setup\n\nPieces**: 
     - King (♔): Moves one square in any direction.
     - Queen (♕): Moves any number of squares in any direction.
     - Rook (♖): Moves horizontally or vertically.
@@ -638,71 +640,107 @@ learn = {
     - Pawns on the second row for each side.
     """,
     
-    "How the Pieces Move": """
-    **King**: Moves one square in any direction.
-    **Queen**: Moves any number of squares vertically, horizontally, or diagonally.
-    **Rook**: Moves any number of squares horizontally or vertically.
-    **Bishop**: Moves diagonally any number of squares.
-    **Knight**: Moves in an L-shape and can jump over pieces.
-    **Pawn**: Moves forward one square, captures diagonally.
+    "Topic 2": """
+    **How the Pieces Move\n\nKing**: \nMoves one square in any direction.
+    **Queen**: \nMoves any number of squares vertically, horizontally, or diagonally.
+    **Rook**: \nMoves any number of squares horizontally or vertically.
+    **Bishop**: \nMoves diagonally any number of squares.
+    **Knight**: \nMoves in an L-shape and can jump over pieces.
+    **Pawn**: \nMoves forward one square, captures diagonally.
     """,
 
-    "Basic Rules": """
-    **Objective**: Checkmate the opponent's king.
-    **Check**: When a king is under threat and must be protected.
-    **Checkmate**: When the king is in check and cannot escape.
-    **Stalemate**: A draw occurs when a player cannot make a legal move but is not in check.
+    "Topic 3": """
+    **Basic Rules\n\nObjective**: \nCheckmate the opponent's king.
+    **Check**: \nWhen a king is under threat and must be protected.
+    **Checkmate**: \nWhen the king is in check and cannot escape.
+    **Stalemate**: \nA draw occurs when a player cannot make a legal move but is not in check.
     """,
 
-    "Special Moves": """
-    **Castling**: Move the king two squares towards a rook, then move the rook next to the king. Conditions apply.
-    **En Passant**: Special pawn capture when a pawn moves two squares forward.
-    **Pawn Promotion**: When a pawn reaches the 8th rank, it can become a queen, rook, bishop, or knight.
+    "Topic 4": """
+    **Special Moves\n\nCastling**: \nMove the king two squares towards a rook, then move the rook next to the king. Conditions apply.
+    **En Passant**: \nSpecial pawn capture when a pawn moves two squares forward.
+    **Pawn Promotion**: \nWhen a pawn reaches the 8th rank, it can become a queen, rook, bishop, or knight.
     """,
 
-    "Winning Conditions": """
-    **Checkmate**: The most common way to win.
-    **Resignation**: A player can concede at any time.
-    **Stalemate**: A draw if no legal moves are available and the player isn't in check.
-    **Threefold Repetition**: A draw if the same position occurs three times.
-    **50-Move Rule**: A draw if no pawn has moved and no piece has been captured in 50 moves.
+    "Topic 5": """
+    **Winning Conditions\n\nCheckmate**: \nThe most common way to win.
+    **Resignation**: \nA player can concede at any time.
+    **Stalemate**: \nA draw if no legal moves are available and the player isn't in check.
+    **Threefold Repetition**: \nA draw if the same position occurs three times.
+    **50-Move Rule**: \nA draw if no pawn has moved and no piece has been captured in 50 moves.
     """,
 
-    "Opening Principles": """
-    **Control the Center**: Move pawns and pieces to control the center.
-    **Develop Your Pieces**: Move knights and bishops early.
-    **King Safety**: Castle early to protect your king.
+    "Topic 6": """
+    **Opening Principles\n\nControl the Center**: \nMove pawns and pieces to control the center.
+    **Develop Your Pieces**: \nMove knights and bishops early.
+    **King Safety**: \nCastle early to protect your king.
     """,
 
-    "Tactics": """
-    **Fork**: One piece attacks two enemy pieces.
-    **Pin**: A piece is immobilized to protect a more valuable piece behind it.
-    **Skewer**: A more valuable piece is attacked, forcing it to move, exposing a weaker piece behind it.
-    **Discovered Attack**: Moving one piece reveals an attack from another.
+    "Topic 7": """
+    **Tactics\n\nFork**: \nOne piece attacks two enemy pieces.
+    **Pin**: \nA piece is immobilized to protect a more valuable piece behind it.
+    **Skewer**: \nA more valuable piece is attacked, forcing it to move, exposing a weaker piece behind it.
+    **Discovered Attack**: \nMoving one piece reveals an attack from another.
     """,
 
-    "Endgame Principles": """
-    **Activate the King**: In the endgame, the king becomes powerful.
-    **Push Passed Pawns**: Promote pawns to win.
-    **Opposition**: In king and pawn endgames, opposition is key.
+    "Topic 8": """
+    **Endgame Principles\n\nActivate the King**: \nIn the endgame, the king becomes powerful.
+    **Push Passed Pawns**: \nPromote pawns to win.
+    **Opposition**: \nIn king and pawn endgames, opposition is key.
     """,
 
-    "Common Mistakes to Avoid": """
-    - Moving the same piece multiple times in the opening.
+    "Topic 9": """
+    Common Mistakes to Avoid\n\n- Moving the same piece multiple times in the opening.
     - Neglecting King Safety.
     - Not controlling the center.
     """,
 
-    "Practice Puzzles": """
-    **Puzzle 1**: Find the checkmate in one move.
+    "Topic 10": """
+    **Practice Puzzles\n\nPuzzle 1**: \nFind the checkmate in one move.
     """,
 
-    "Chess Notation": """
-    **Algebraic Notation**: 
+    "Topic 11": """
+    **Chess Notation\n\nAlgebraic Notation**:\n 
     - Files: a-h (columns).
     - Ranks: 1-8 (rows).
     **Example Move**: e4 means moving the pawn to the e4 square.
     """
 }
+
+@bot.message_handler(commands=['chess_basics'])
+def basics(message):
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+    
+    # Создаем кнопки с названиями тем
+    btn1 = types.KeyboardButton('Start')
+    btn2 = types.KeyboardButton('Topic 1')
+    btn3 = types.KeyboardButton('Topic 2')
+    btn4 = types.KeyboardButton('Topic 3')
+    btn5 = types.KeyboardButton('Topic 4')
+    btn6 = types.KeyboardButton('Topic 5')
+    btn7 = types.KeyboardButton('Topic 6')
+    btn8 = types.KeyboardButton('Topic 7')
+    btn9 = types.KeyboardButton('Topic 8')
+    btn10 = types.KeyboardButton('Topic 9')
+    btn11 = types.KeyboardButton('Topic 10')
+    btn12 = types.KeyboardButton('Topic 11')
+
+    # Добавляем кнопки в клавиатуру
+    markup.add(btn1, btn2, btn3)
+    markup.add(btn4, btn5, btn6)
+    markup.add(btn7, btn8, btn9)
+    markup.add(btn10, btn11, btn12)
+
+    # Отправляем сообщение с клавиатурой
+    bot.send_message(message.chat.id, "Выберите раздел для изучения:", reply_markup=markup)
+
+# Обработчик текстовых сообщений
+@bot.message_handler(func=lambda message: True)
+def send_text(message):
+    # Если текст сообщения совпадает с одним из ключей basic, отправляем соответствующее описание
+    if message.text in basic:
+        bot.send_message(message.chat.id, basic[message.text], parse_mode="Markdown")
+    else:
+        bot.send_message(message.chat.id, "Пожалуйста, выберите раздел с помощью кнопок.")
 
 bot.polling(non_stop=True)
