@@ -710,37 +710,78 @@ basic = {
 @bot.message_handler(commands=['chess_basics'])
 def basics(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+    btn_start = types.KeyboardButton('Start')
     
-    # Создаем кнопки с названиями тем
-    btn1 = types.KeyboardButton('Start')
-    btn2 = types.KeyboardButton('Topic 1')
-    btn3 = types.KeyboardButton('Topic 2')
-    btn4 = types.KeyboardButton('Topic 3')
-    btn5 = types.KeyboardButton('Topic 4')
-    btn6 = types.KeyboardButton('Topic 5')
-    btn7 = types.KeyboardButton('Topic 6')
-    btn8 = types.KeyboardButton('Topic 7')
-    btn9 = types.KeyboardButton('Topic 8')
-    btn10 = types.KeyboardButton('Topic 9')
-    btn11 = types.KeyboardButton('Topic 10')
-    btn12 = types.KeyboardButton('Topic 11')
-
-    # Добавляем кнопки в клавиатуру
-    markup.add(btn1, btn2, btn3)
-    markup.add(btn4, btn5, btn6)
-    markup.add(btn7, btn8, btn9)
-    markup.add(btn10, btn11, btn12)
-
-    # Отправляем сообщение с клавиатурой
-    bot.send_message(message.chat.id, "Выберите раздел для изучения:", reply_markup=markup)
+    # Добавляем только кнопку Start
+    markup.add(btn_start)
+    
+    bot.send_message(message.chat.id, "Welcome! Press 'Start' to begin.", reply_markup=markup)
 
 # Обработчик текстовых сообщений
 @bot.message_handler(func=lambda message: True)
-def send_text(message):
-    # Если текст сообщения совпадает с одним из ключей basic, отправляем соответствующее описание
-    if message.text in basic:
-        bot.send_message(message.chat.id, basic[message.text], parse_mode="Markdown")
+def send_topic(message):
+    if message.text == "Start":
+        bot.send_message(message.chat.id, basic["Start"])
+        show_next_topic(message, 1)  # Показать первую тему
     else:
-        bot.send_message(message.chat.id, "Пожалуйста, выберите раздел с помощью кнопок.")
+        # Определение текущей темы из сообщения
+        topic_num = None
+        for topic in basic:
+            if message.text == topic:
+                topic_num = int(topic.split(" ")[1])  # Извлечение номера темы
+                
+        if topic_num:
+            # Отправляем текст текущей темы
+            bot.send_message(message.chat.id, basic[f"Topic {topic_num}"], parse_mode="Markdown")
+            # Если не последняя тема, показываем кнопку следующей
+            if topic_num < 11:
+                show_next_topic(message, topic_num + 1)
+        else:
+            bot.send_message(message.chat.id, "Please select a valid topic.")
+
+# Функция для показа кнопки следующей темы
+def show_next_topic(message, next_topic_num):
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+    next_topic_btn = types.KeyboardButton(f"Topic {next_topic_num}")
+    
+    markup.add(next_topic_btn)
+    
+    bot.send_message(message.chat.id, f"Press the button for Topic {next_topic_num}.", reply_markup=markup)
+
+# @bot.message_handler(commands=['chess_basics'])
+# def basics(message):
+#     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+
+#     btn1 = types.KeyboardButton('Start')
+#     btn2 = types.KeyboardButton('Topic 1')
+#     btn3 = types.KeyboardButton('Topic 2')
+#     btn4 = types.KeyboardButton('Topic 3')
+#     btn5 = types.KeyboardButton('Topic 4')
+#     btn6 = types.KeyboardButton('Topic 5')
+#     btn7 = types.KeyboardButton('Topic 6')
+#     btn8 = types.KeyboardButton('Topic 7')
+#     btn9 = types.KeyboardButton('Topic 8')
+#     btn10 = types.KeyboardButton('Topic 9')
+#     btn11 = types.KeyboardButton('Topic 10')
+#     btn12 = types.KeyboardButton('Topic 11')
+
+#     # Добавляем кнопки в клавиатуру
+#     markup.add(btn1)
+#     markup.add(btn2, btn3)
+#     markup.add(btn4, btn5, btn6)
+#     markup.add(btn7, btn8)
+#     markup.add(btn9, btn10, btn11)
+#     markup.add(btn12)
+
+#     bot.send_message(message.chat.id, "Select one of the topics to study:", reply_markup=markup)
+
+# # Обработчик текстовых сообщений
+# @bot.message_handler(func=lambda message: True)
+# def send_text(message):
+#     # Если текст сообщения совпадает с одним из ключей basic, отправляем соответствующее описание
+#     if message.text in basic:
+#         bot.send_message(message.chat.id, basic[message.text], parse_mode="Markdown")
+#     else:
+#         bot.send_message(message.chat.id, "Please select a topic using the button.")
 
 bot.polling(non_stop=True)
