@@ -717,11 +717,16 @@ def basics(message):
     
     bot.send_message(message.chat.id, "Welcome! Press 'Start' to begin.", reply_markup=markup)
 
+# Функция для скрытия клавиатуры
+def hide_keyboard():
+    # Создание пустой клавиатуры для скрытия предыдущей
+    return types.ReplyKeyboardRemove()
+
 # Обработчик текстовых сообщений
 @bot.message_handler(func=lambda message: True)
 def send_topic(message):
     if message.text == "Start":
-        bot.send_message(message.chat.id, basic["Start"])
+        bot.send_message(message.chat.id, basic["Start"], reply_markup=hide_keyboard())
         show_next_topic(message, 1)  # Показать первую тему
     else:
         # Определение текущей темы из сообщения
@@ -732,12 +737,12 @@ def send_topic(message):
                 
         if topic_num:
             # Отправляем текст текущей темы
-            bot.send_message(message.chat.id, basic[f"Topic {topic_num}"], parse_mode="Markdown")
+            bot.send_message(message.chat.id, basic[f"Topic {topic_num}"], parse_mode="Markdown", reply_markup=hide_keyboard())
             # Если не последняя тема, показываем кнопку следующей
             if topic_num < 11:
                 show_next_topic(message, topic_num + 1)
         else:
-            bot.send_message(message.chat.id, "Please select a valid topic.")
+            bot.send_message(message.chat.id, "Please select a valid topic.", reply_markup=hide_keyboard())
 
 # Функция для показа кнопки следующей темы
 def show_next_topic(message, next_topic_num):
