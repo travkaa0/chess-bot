@@ -1,0 +1,19 @@
+1: white to move. mate in 1. Qa8#
+2: whit to move. mate in 1. Bc4#
+3: whit to move. mate in 1. Qe5#
+4: whit to move. mate in 1. e8N#
+5: whit to move. mate in 1. Rh7#
+6: white to move. mate in 3. Nf7 R:f7
+					  Qd8+ Rf8
+					  Q:f8#
+7: black to move. winning material. ... Re4
+						    Q:e4 Bf5
+8. black to move. fork. ... B:f5
+				   f5 B:c3
+				   R:c3 Ne2
+9. white to move. fork. Nd7
+10. white to move. winning material. B:f6 Q:c4
+						     Re4
+11. black to move. mate in 3. ... R:a2
+					   K:a2 Ra3
+					   K:a3 Qa1#
