@@ -7,7 +7,7 @@ bot = telebot.TeleBot('8025279344:AAEr6dt_MU8rKCbrjAWs610rrZ_AM9Cy5Os')
 
 @bot.message_handler(commands=['start'])
 def hello(message):
-    #выяснение айди чата и отправка на него сообщения при запуске команды "старт". вывод: Привет, {имя пользователя}
+    # find out the chat ID and send a message to it when the "start" command is run. output: Hello, {username}
     bot.send_message(message.chat.id, f'Hello, {message.from_user.first_name}, glad you decided to visit my bot.\nI hope you like it.')
 
 tasks = {
@@ -24,9 +24,9 @@ tasks = {
     '11': {'image': 'puzzles/11.png', 'solution': '... R:a2\nK:a2 Ra3\nK:a3 Qa1#', 'topic': 'black to move. mate in 3.'} 
 }
 
-# Функция для экранирования специальных символов в MarkdownV2
+# function for escaping special characters in MarkdownV2
 def escape_markdown_v2(text):
-    # Экранируем только символы, которые обязательно нужно экранировать
+    # we only escape characters that must be escaped.
     escape_chars = r'\_*[]()~`>#+-=|{}!'
     return ''.join(['\\' + char if char in escape_chars else char for char in text])
 
@@ -39,75 +39,52 @@ def tasks_handler(message):
 
     bot.send_message(message.chat.id, 'Do you want to solve the puzzle?', reply_markup=markup)
 
-# Обработка нажатий на кнопки "Yes" или "No"
+# processing clicks on the "Yes" and "No" buttons
 @bot.callback_query_handler(func=lambda call: call.data in ['solve', 'later'])
 def callback_handler(call):
     if call.data == 'solve':
-        # Выбираем случайную задачу
+        # we choose a random task
         task_id = random.choice(list(tasks.keys()))
         task = tasks[task_id]
 
-        # Экранируем специальные символы в решении задачи
+        # escape special characters in solving the puzzle
         solution = escape_markdown_v2(task['solution'])
         topic = escape_markdown_v2(task['topic'])
 
-        # Отправляем картинку задачи и решение в спойлере
+        # we send a picture of the puzzle and the solution in a spoiler
         bot.send_message(call.message.chat.id, f"Topic of puzzle: {topic}")
         bot.send_photo(call.message.chat.id, open(task['image'], 'rb'))
         bot.send_message(call.message.chat.id, f"||{solution}||", parse_mode='MarkdownV2')
         
     elif call.data == 'later':
-        # Отправляем сообщение, если выбрано "Нет"
         bot.send_message(call.message.chat.id, 'OK, we will solve puzzles another time.')
-
-    # @bot.message_handler(func=lambda message: message.text.isdigit())  # Проверка, что сообщение содержит число
-    # def send_task(message):
-    #     num = message.task  # Получаем число, введенное пользователем
-    
-    #     if num in task:
-            
-    #         with open(task[num], 'rb') as img:
-    #             bot.send_photo(message.chat.id, img)
-    #     else:
-    #         # Если число не связано с картинкой, отправляем сообщение
-    #         bot.send_message(message.chat.id, 'There is no puzzle under this number.')
-    
-    # @bot.message_handler(func=lambda message: True)
-    # def info(message):
-    #     text = message.text.lower()
-    #     for key, response in tasks.items():
-    #         if key in text:
-    #             bot.reply_to(message, response)
-    #             break
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_inline(call):
+    # we get data about the century selected in the inline button
     century = call.data
     if century in chess_history:
 
         history_text = ""
         for topic, description in chess_history[century]:
+            # we form the text by adding the topic (in bold text format) and its description
             history_text += f"*{topic}*\n{description}\n\n"
 
         bot.send_message(call.message.chat.id, history_text, parse_mode='Markdown')
 
-# sol = {
-#     '1': 'solution',
-#     '2': 'solution'
-# }
-
-# @bot.message_handler(commands=['solutions_to_puzzles'])
-# def solutions(message):
-#     bot.send_message(message.chat.id, 'Write the puzzle number')
-
-
 def split_text(text, max_length=4096):
+    # the split_text function splits a long text into chunks if its length exceeds a specified limit.
+    # max_length - the maximum length of one chunk, default is 4096 (Telegram's message size limit).
+
     chunks = []
     while len(text) > max_length:
+        # find the last newline character ('\n') before the max_length to avoid splitting in the middle of a word.
         split_index = text.rfind('\n', 0, max_length)
         if split_index == -1:
             split_index = max_length
         chunks.append(text[:split_index])
+
+        # remove the chunk from the original text.
         text = text[split_index:]
     chunks.append(text)
     return chunks
@@ -189,84 +166,6 @@ def books(message):
     chunks = split_text(chess_books_text)
     for chunk in chunks:
         bot.send_message(message.chat.id, chunk)
-
-
-# @bot.message_handler(commands=['books'])
-# def books(message):
-
-#     chess_books_text = """
-#     1. Title: My System
-#     Author: Aron Nimzowitsch
-#     Description: This influential book introduces fundamental concepts of positional play, including pawn structures, prophylaxis, overprotection, and the blockading of passed pawns.
-#     Target Audience: Intermediate to advanced players
-
-#     2. Title: The Life and Games of Mikhail Tal
-#     Author: Mikhail Tal
-#     Description: A blend of autobiography and detailed analysis of games by the eighth World Chess Champion, known for his tactical brilliance and aggressive style.
-#     Target Audience: All levels, though intermediate and advanced players will benefit most
-
-#     3. Title: Chess Fundamentals
-#     Author: José Raúl Capablanca
-#     Description: A classic work focusing on essential chess principles such as simple tactics, endgames, and positional play, written by the third World Chess Champion.
-#     Target Audience: Beginners to intermediate players
-
-#     4. Title: Silman's Complete Endgame Course
-#     Author: Jeremy Silman
-#     Description: A comprehensive guide to endgames, organized by rating level to teach players the most essential endgame principles as they progress.
-#     Target Audience: Beginners to advanced players
-
-#     5. Title: Thinking, Fast and Slow
-#     Author: Daniel Kahneman
-#     Description: Not specifically a chess book, but highly recommended for understanding decision-making, mental biases, and managing risk, which are crucial skills in chess.
-#     Target Audience: Intermediate to advanced players
-
-#     6. Title: 100 Endgames You Must Know
-#     Author: Jesús de la Villa
-#     Description: Focuses on 100 essential endgames that every chess player must know, making it a highly relevant resource for practical improvement.
-#     Target Audience: Intermediate players, though advanced players will also benefit
-
-#     7. Title: How to Reassess Your Chess
-#     Author: Jeremy Silman
-#     Description: Teaches players how to recognize and capitalize on positional imbalances, helping them think like a master.
-#     Target Audience: Intermediate to advanced players
-
-#     8. Title: Zurich International Chess Tournament, 1953
-#     Author: David Bronstein
-#     Description: A detailed account of one of the most famous chess tournaments, with insights and annotated games from the world's top players, including future world champions.
-#     Target Audience: Advanced players and those aspiring to master-level play
-
-#     9. Title: Bobby Fischer Teaches Chess
-#     Author: Bobby Fischer
-#     Description: A beginner-friendly book structured as a series of puzzles, focusing on tactics and checkmate patterns.
-#     Target Audience: Beginners to intermediate players
-
-#     10. Title: Mastering Chess Strategy
-#     Author: Johan Hellsten
-#     Description: A comprehensive guide on strategy, covering piece coordination, weak squares, pawn structures, and other core strategic themes.
-#     Target Audience: Intermediate to advanced players
-
-#     11. Title: Attacking Chess: The King’s Indian
-#     Author: David Vigorito
-#     Description: A deep dive into the King’s Indian Defense, presenting modern ideas and analysis for players looking to master this aggressive opening.
-#     Target Audience: Advanced players or players interested in the King's Indian Defense
-
-#     12. Title: Secrets of Modern Chess Strategy: Advances Since Nimzowitsch
-#     Author: John Watson
-#     Description: Explores how modern chess strategy has evolved from Nimzowitsch's ideas, focusing on flexibility in principles such as center control and pawn structures.
-#     Target Audience: Advanced players and chess enthusiasts
-
-#     13. Title: Chess Structures: A Grandmaster Guide
-#     Author: Mauricio Flores Rios
-#     Description: A guide focused on pawn structures and their influence on chess strategy, providing practical advice for different formations.
-#     Target Audience: Intermediate to advanced players
-
-#     14. Title: The Art of Attack in Chess
-#     Author: Vladimir Vuković
-#     Description: A classic on attacking play, covering tactics, sacrifices, and strategic ideas that help players become more aggressive and dynamic.
-#     Target Audience: Intermediate to advanced players
-#     """
-
-#     bot.send_message(message.chat.id, chess_books_text)
 
 @bot.message_handler(commands=['games'])
 def games(message):
@@ -372,18 +271,6 @@ def history(message):
 
     bot.send_message(message.chat.id, "Select a century to learn about the history of chess:", reply_markup=markup)
 
-# @bot.callback_query_handler(func=lambda call: True)
-# def handle_callback(call):
-#     century = call.data
-#     if century in chess_history:
-#         # Combine topics into a single message
-#         history_text = ""
-#         for topic, description in chess_history[century]:
-#             history_text += f"*{topic}*\n{description}\n\n"
-
-#         # Send the history of the selected century
-#         bot.send_message(call.message.chat.id, history_text, parse_mode='Markdown')
-
 @bot.message_handler(commands=['recommendations'])
 def rec(message):
     recs = """
@@ -461,6 +348,7 @@ def quotes(message):
         "Judit Polgar:\n\nYou have to believe in yourself when you play chess."
     ]
 
+    # send a random quote
     rand_quote = random.choice(quote)
     bot.send_message(message.chat.id, rand_quote)
 
@@ -615,13 +503,13 @@ def dic(message):
         ]
     }
 
-    # Ask user for the letter
+    # ask user for the letter
     bot.send_message(message.chat.id, "Please enter a letter (A-Z) to get the chess terms:")
 
-    # Use a state to capture the user's response
+    # use a state to capture the user's response
     @bot.message_handler(func=lambda m: True)
     def info(message):
-        letter = message.text.upper()  # Convert to uppercase for consistency
+        letter = message.text.upper()  # convert to uppercase for consistency
         if letter in terms:
             # Format response
             response = f"**Terms for '{letter}':**\n\n\n" + "\n".join(terms[letter])
@@ -629,7 +517,7 @@ def dic(message):
         else:
             bot.send_message(message.chat.id, "Invalid letter. Please enter a letter (A-Z).")
 
-        # Optionally, you can remove this handler after the first valid response
+        # optionally, you can remove this handler after the first valid response
         bot.remove_message_handler(info)
 
 @bot.message_handler(commands=['learning'])
@@ -736,39 +624,38 @@ def basics(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
     btn_start = types.KeyboardButton('Start')
     
-    # Добавляем только кнопку Start
     markup.add(btn_start)
     
     bot.send_message(message.chat.id, "Welcome! Press 'Start' to begin.", reply_markup=markup)
 
-# Функция для скрытия клавиатуры
+# function to hide the keyboard
 def hide_keyboard():
-    # Создание пустой клавиатуры для скрытия предыдущей
+    # create a blank keyboard to hide the previous one
     return types.ReplyKeyboardRemove()
 
-# Обработчик текстовых сообщений
+# text message handler
 @bot.message_handler(func=lambda message: True)
 def send_topic(message):
     if message.text == "Start":
         bot.send_message(message.chat.id, basic["Start"], reply_markup=hide_keyboard())
-        show_next_topic(message, 1)  # Показать первую тему
+        show_next_topic(message, 1)  # show first topic
     else:
-        # Определение текущей темы из сообщения
+        # determine the current topic from a message
         topic_num = None
         for topic in basic:
             if message.text == topic:
-                topic_num = int(topic.split(" ")[1])  # Извлечение номера темы
+                topic_num = int(topic.split(" ")[1])  # extracting the topic number
                 
         if topic_num:
-            # Отправляем текст текущей темы
             bot.send_message(message.chat.id, basic[f"Topic {topic_num}"], parse_mode="Markdown", reply_markup=hide_keyboard())
-            # Если не последняя тема, показываем кнопку следующей
+
+            # if not the last topic, show the next button
             if topic_num < 11:
                 show_next_topic(message, topic_num + 1)
         else:
             bot.send_message(message.chat.id, "Please select a valid topic.", reply_markup=hide_keyboard())
 
-# Функция для показа кнопки следующей темы
+# function to show next topic button
 def show_next_topic(message, next_topic_num):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
     next_topic_btn = types.KeyboardButton(f"Topic {next_topic_num}")
@@ -776,41 +663,5 @@ def show_next_topic(message, next_topic_num):
     markup.add(next_topic_btn)
     
     bot.send_message(message.chat.id, f"Press the button for Topic {next_topic_num}.", reply_markup=markup)
-
-# @bot.message_handler(commands=['chess_basics'])
-# def basics(message):
-#     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-
-#     btn1 = types.KeyboardButton('Start')
-#     btn2 = types.KeyboardButton('Topic 1')
-#     btn3 = types.KeyboardButton('Topic 2')
-#     btn4 = types.KeyboardButton('Topic 3')
-#     btn5 = types.KeyboardButton('Topic 4')
-#     btn6 = types.KeyboardButton('Topic 5')
-#     btn7 = types.KeyboardButton('Topic 6')
-#     btn8 = types.KeyboardButton('Topic 7')
-#     btn9 = types.KeyboardButton('Topic 8')
-#     btn10 = types.KeyboardButton('Topic 9')
-#     btn11 = types.KeyboardButton('Topic 10')
-#     btn12 = types.KeyboardButton('Topic 11')
-
-#     # Добавляем кнопки в клавиатуру
-#     markup.add(btn1)
-#     markup.add(btn2, btn3)
-#     markup.add(btn4, btn5, btn6)
-#     markup.add(btn7, btn8)
-#     markup.add(btn9, btn10, btn11)
-#     markup.add(btn12)
-
-#     bot.send_message(message.chat.id, "Select one of the topics to study:", reply_markup=markup)
-
-# # Обработчик текстовых сообщений
-# @bot.message_handler(func=lambda message: True)
-# def send_text(message):
-#     # Если текст сообщения совпадает с одним из ключей basic, отправляем соответствующее описание
-#     if message.text in basic:
-#         bot.send_message(message.chat.id, basic[message.text], parse_mode="Markdown")
-#     else:
-#         bot.send_message(message.chat.id, "Please select a topic using the button.")
 
 bot.polling(non_stop=True)
