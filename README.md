@@ -11,4 +11,5 @@ recommendations - Recommendations for chess beginners
 quotes - Random quote from grandmasters
 learning - Links to video tutorials for beginners on various topics
 chess_basics - Chess Basics by Topics
+dictionary - Dictionary of chess terms
 ```
