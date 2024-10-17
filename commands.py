@@ -59,7 +59,7 @@ def callback_handler(call):
     elif call.data == 'later':
         bot.send_message(call.message.chat.id, 'OK, we will solve puzzles another time.')
 
-@bot.callback_query_handler(func=lambda call: True)
+@bot.callback_query_handler(func=lambda call: call.data in chess_history)
 def callback_inline(call):
     # we get data about the century selected in the inline button
     century = call.data
@@ -506,19 +506,34 @@ def dic(message):
     # ask user for the letter
     bot.send_message(message.chat.id, "Please enter a letter (A-Z) to get the chess terms:")
 
-    # use a state to capture the user's response
-    @bot.message_handler(func=lambda m: True)
-    def info(message):
-        letter = message.text.upper()  # convert to uppercase for consistency
-        if letter in terms:
-            # Format response
-            response = f"**Terms for '{letter}':**\n\n\n" + "\n".join(terms[letter])
-            bot.send_message(message.chat.id, response, parse_mode='Markdown')
-        else:
-            bot.send_message(message.chat.id, "Invalid letter. Please enter a letter (A-Z).")
+    # register the next step
+    bot.register_next_step_handler(message, get_terms, terms)
 
-        # optionally, you can remove this handler after the first valid response
-        bot.remove_message_handler(info)
+# function to process the entered letter
+def get_terms(message, terms):
+    letter = message.text.upper()
+
+    if letter in terms:
+        # we form and send a response with terms
+        response = f"**Terms for '{letter}':**\n\n" + "\n".join(terms[letter])
+        bot.send_message(message.chat.id, response, parse_mode='Markdown')
+    else:
+        bot.send_message(message.chat.id, "Invalid letter. Please enter a letter (A-Z).")
+        bot.register_next_step_handler(message, get_terms, terms)
+
+    # use a state to capture the user's response
+    # @bot.message_handler(func=lambda m: True)
+    # def info(message):
+    #     letter = message.text.upper()  # convert to uppercase for consistency
+    #     if letter in terms:
+    #         # Format response
+    #         response = f"**Terms for '{letter}':**\n\n\n" + "\n".join(terms[letter])
+    #         bot.send_message(message.chat.id, response, parse_mode='Markdown')
+    #     else:
+    #         bot.send_message(message.chat.id, "Invalid letter. Please enter a letter (A-Z).")
+
+    #     # optionally, you can remove this handler after the first valid response
+    #     bot.remove_message_handler(info)
 
 @bot.message_handler(commands=['learning'])
 def learn(message):
