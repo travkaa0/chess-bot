@@ -10,36 +10,69 @@ def hello(message):
     #выяснение айди чата и отправка на него сообщения при запуске команды "старт". вывод: Привет, {имя пользователя}
     bot.send_message(message.chat.id, f'Hello, {message.from_user.first_name}, glad you decided to visit my bot.\nI hope you like it.')
 
+tasks = {
+    '1': {'image': 'puzzles/1.png', 'solution': 'Qa8#', 'topic': 'white to move. mate in 1.'},
+    '2': {'image': 'puzzles/2.png', 'solution': 'Bc4#', 'topic': 'white to move. mate in 1.'},
+    '3': {'image': 'puzzles/3.png', 'solution': 'Qe5#', 'topic': 'white to move. mate in 1.'},
+    '4': {'image': 'puzzles/4.png', 'solution': 'e8N#', 'topic': 'white to move. mate in 1.'},
+    '5': {'image': 'puzzles/5.png', 'solution': 'Rh7#', 'topic': 'white to move. mate in 1.'},
+    '6': {'image': 'puzzles/6.png', 'solution': 'Nf7 R:f7\nQd8+ Rf8\nQ:f8#', 'topic': 'white to move. mate in 3.'},
+    '7': {'image': 'puzzles/7.png', 'solution': '... Re4\nQ:e4 Bf5', 'topic': 'black to move. winning material.'},
+    '8': {'image': 'puzzles/8.png', 'solution': 'B:f5\nf5 B:c3\nR:c3 Ne2', 'topic': 'black to move. fork.'},
+    '9': {'image': 'puzzles/9.png', 'solution': 'Nd7', 'topic': 'white to move. fork.'},
+    '10': {'image': 'puzzles/10.png', 'solution': 'B:f6 Q:c4\nRe4', 'topic': 'white to move. winning material.'},
+    '11': {'image': 'puzzles/11.png', 'solution': '... R:a2\nK:a2 Ra3\nK:a3 Qa1#', 'topic': 'black to move. mate in 3.'} 
+}
+
+# Функция для экранирования специальных символов в MarkdownV2
+def escape_markdown_v2(text):
+    # Экранируем только символы, которые обязательно нужно экранировать
+    escape_chars = r'\_*[]()~`>#+-=|{}!'
+    return ''.join(['\\' + char if char in escape_chars else char for char in text])
+
 @bot.message_handler(commands=['puzzles'])
-def tasks(message):
-
-    task = {
-        '1': 'task',
-        '2': 'task',
-        '3': 'task'
-    }
-
-    #bot.send_message(message.chat.id, 'What difficulty will you choose?')
+def tasks_handler(message):
+    # Создаем кнопки "Yes" и "No"
     markup = types.InlineKeyboardMarkup()
-    btn1 = types.InlineKeyboardButton('Easy', callback_data='easy')
-    btn2 = types.InlineKeyboardButton('Middle', callback_data='middle')
-    btn3 = types.InlineKeyboardButton('Hard', callback_data='hard')
-
-    markup.row(btn1, btn2, btn3)
-
-    bot.send_message(message.chat.id, 'What difficulty will you choose?', reply_markup=markup)
-
-    @bot.message_handler(func=lambda message: message.text.isdigit())  # Проверка, что сообщение содержит число
-    def send_task(message):
-        num = message.task  # Получаем число, введенное пользователем
+    btn_yes = types.InlineKeyboardButton('Yes', callback_data='solve')
+    btn_no = types.InlineKeyboardButton('No', callback_data='later')
+    markup.add(btn_yes, btn_no)
     
-        if num in task:
+    # Спрашиваем пользователя
+    bot.send_message(message.chat.id, 'Do you want to solve the puzzle?', reply_markup=markup)
+
+# Обработка нажатий на кнопки "Yes" или "No"
+@bot.callback_query_handler(func=lambda call: call.data in ['solve', 'later'])
+def callback_handler(call):
+    if call.data == 'solve':
+        # Выбираем случайную задачу
+        task_id = random.choice(list(tasks.keys()))
+        task = tasks[task_id]
+
+        # Экранируем специальные символы в решении задачи
+        solution = escape_markdown_v2(task['solution'])
+        topic = escape_markdown_v2(task['topic'])
+
+        # Отправляем картинку задачи и решение в спойлере
+        bot.send_message(call.message.chat.id, f"Тема задачи: {topic}")
+        bot.send_photo(call.message.chat.id, open(task['image'], 'rb'))
+        bot.send_message(call.message.chat.id, f"||{solution}||", parse_mode='MarkdownV2')
+        
+    elif call.data == 'later':
+        # Отправляем сообщение, если выбрано "Нет"
+        bot.send_message(call.message.chat.id, 'OK, we will solve puzzles another time.')
+
+    # @bot.message_handler(func=lambda message: message.text.isdigit())  # Проверка, что сообщение содержит число
+    # def send_task(message):
+    #     num = message.task  # Получаем число, введенное пользователем
+    
+    #     if num in task:
             
-            with open(task[num], 'rb') as img:
-                bot.send_photo(message.chat.id, img)
-        else:
-            # Если число не связано с картинкой, отправляем сообщение
-            bot.send_message(message.chat.id, 'There is no puzzle under this number.')
+    #         with open(task[num], 'rb') as img:
+    #             bot.send_photo(message.chat.id, img)
+    #     else:
+    #         # Если число не связано с картинкой, отправляем сообщение
+    #         bot.send_message(message.chat.id, 'There is no puzzle under this number.')
     
     # @bot.message_handler(func=lambda message: True)
     # def info(message):
@@ -51,13 +84,6 @@ def tasks(message):
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_inline(call):
-    if call.data == 'easy':
-        bot.send_message(call.message.chat.id, 'Write a number from 1 to 10.')
-    elif call.data == 'middle':
-        bot.send_message(call.message.chat.id, 'Write a number from 11 to 20.')
-    elif call.data == 'hard':
-        bot.send_message(call.message.chat.id, 'Write a number from 21 to 30.')
-
     century = call.data
     if century in chess_history:
 
