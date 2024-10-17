@@ -1,8 +1,8 @@
 1: white to move. mate in 1. Qa8#
-2: whit to move. mate in 1. Bc4#
-3: whit to move. mate in 1. Qe5#
-4: whit to move. mate in 1. e8N#
-5: whit to move. mate in 1. Rh7#
+2: white to move. mate in 1. Bc4#
+3: white to move. mate in 1. Qe5#
+4: white to move. mate in 1. e8N#
+5: white to move. mate in 1. Rh7#
 6: white to move. mate in 3. Nf7 R:f7
 					  Qd8+ Rf8
 					  Q:f8#
