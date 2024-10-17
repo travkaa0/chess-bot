@@ -1,4 +1,4 @@
-### Chess bot for learning and more
+# Chess bot for learning and more
 
 :pushpin: **Functions of this bot**
 
