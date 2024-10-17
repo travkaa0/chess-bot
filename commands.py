@@ -32,13 +32,11 @@ def escape_markdown_v2(text):
 
 @bot.message_handler(commands=['puzzles'])
 def tasks_handler(message):
-    # Создаем кнопки "Yes" и "No"
     markup = types.InlineKeyboardMarkup()
     btn_yes = types.InlineKeyboardButton('Yes', callback_data='solve')
     btn_no = types.InlineKeyboardButton('No', callback_data='later')
     markup.add(btn_yes, btn_no)
-    
-    # Спрашиваем пользователя
+
     bot.send_message(message.chat.id, 'Do you want to solve the puzzle?', reply_markup=markup)
 
 # Обработка нажатий на кнопки "Yes" или "No"
@@ -54,7 +52,7 @@ def callback_handler(call):
         topic = escape_markdown_v2(task['topic'])
 
         # Отправляем картинку задачи и решение в спойлере
-        bot.send_message(call.message.chat.id, f"Тема задачи: {topic}")
+        bot.send_message(call.message.chat.id, f"Topic of puzzle: {topic}")
         bot.send_photo(call.message.chat.id, open(task['image'], 'rb'))
         bot.send_message(call.message.chat.id, f"||{solution}||", parse_mode='MarkdownV2')
         
