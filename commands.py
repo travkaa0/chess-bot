@@ -3,7 +3,7 @@ from telebot import types
 import random
 
 # token
-bot = telebot.TeleBot('8025279344:AAEr6dt_MU8rKCbrjAWs610rrZ_AM9Cy5Os')
+bot = telebot.TeleBot('7821159484:AAHtVB82Ch2sL1HaUwmvb_7Nd5hyeDHWGbM')
 
 @bot.message_handler(commands=['start'])
 def hello(message):
@@ -651,27 +651,28 @@ def hide_keyboard():
     # create a blank keyboard to hide the previous one
     return types.ReplyKeyboardRemove()
 
-# Обработчик сообщений для шахматных тем
+# Message handler for chess topics
 @bot.message_handler(func=lambda message: message.text in ['Start'] + [f"Topic {i}" for i in range(1, 12)])
 def send_topic(message):
     if message.text == "Start":
         bot.send_message(message.chat.id, basic["Start"], reply_markup=hide_keyboard())
-        show_next_topic(message, 1)  # Показать первую тему
+        show_next_topic(message, 1)  # Show the first topic
     else:
-        # Определение текущей темы из сообщения
+        # Determine the current topic from the message
         topic_num = None
         for topic in basic:
             if message.text == topic:
-                topic_num = int(topic.split(" ")[1])  # Извлекаем номер темы
+                topic_num = int(topic.split(" ")[1])  # Extract the topic number
                 
         if topic_num:
             bot.send_message(message.chat.id, basic[f"Topic {topic_num}"], parse_mode="Markdown", reply_markup=hide_keyboard())
 
-            # Если это не последняя тема, показываем кнопку следующей темы
+            # If this is not the last topic, show the next topic button
             if topic_num < 11:
                 show_next_topic(message, topic_num + 1)
         else:
             bot.send_message(message.chat.id, "Please select a valid topic.", reply_markup=hide_keyboard())
+
 # text message handler
 # @bot.message_handler(func=lambda message: True)
 # def send_topic(message):
@@ -705,11 +706,11 @@ def show_next_topic(message, next_topic_num):
 
 @bot.message_handler(commands=['info'])
 def info(message):
-    markup = markup = types.ReplyKeyboardMarkup()
-    btn_yes = types.KeyboardButton('Yes', url='https://travkaa0.github.io/chess-bot-info.github.io/')
-    btn_no = types.KeyboardButton('No', callback_data='no_info')
-    markup.row(btn_yes, btn_no)
+    markup = types.InlineKeyboardMarkup()
+    btn_yes = types.InlineKeyboardButton(text='Yes', url='https://travkaa0.github.io/chess-bot-info.github.io/')
+    btn_no = types.InlineKeyboardButton(text='No', callback_data='no_info')
 
+    markup.add(btn_yes, btn_no)
     bot.send_message(message.chat.id, "Do you want to get information about the use of my bot?", reply_markup=markup)
 
 bot.polling(non_stop=True)
