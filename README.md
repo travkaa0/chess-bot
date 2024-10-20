@@ -3,6 +3,7 @@
 :pushpin: **Functions of this bot**
 
 ```
+info - Detailed information about the bot, its functionality and my contacts
 games - Grandmaster games to choose from
 books - The best chess books of the moment
 puzzles - Random chess puzzles
