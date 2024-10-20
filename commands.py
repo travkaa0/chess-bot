@@ -40,7 +40,7 @@ def tasks_handler(message):
     bot.send_message(message.chat.id, 'Do you want to solve the puzzle?', reply_markup=markup)
 
 # processing clicks on the "Yes" and "No" buttons
-@bot.callback_query_handler(func=lambda call: call.data in ['solve', 'later'])
+@bot.callback_query_handler(func=lambda call: call.data in ['solve', 'later', 'no_info'])
 def callback_handler(call):
     if call.data == 'solve':
         # we choose a random task
@@ -58,6 +58,9 @@ def callback_handler(call):
         
     elif call.data == 'later':
         bot.send_message(call.message.chat.id, 'OK, we will solve puzzles another time.')
+
+    elif call.data == 'no_info':
+        bot.send_message(call.message.chat.id, "You chose 'No'. If you change your mind, type /info again.")
 
 @bot.callback_query_handler(func=lambda call: call.data in chess_history)
 def callback_inline(call):
@@ -648,27 +651,48 @@ def hide_keyboard():
     # create a blank keyboard to hide the previous one
     return types.ReplyKeyboardRemove()
 
-# text message handler
-@bot.message_handler(func=lambda message: True)
+# Обработчик сообщений для шахматных тем
+@bot.message_handler(func=lambda message: message.text in ['Start'] + [f"Topic {i}" for i in range(1, 12)])
 def send_topic(message):
     if message.text == "Start":
         bot.send_message(message.chat.id, basic["Start"], reply_markup=hide_keyboard())
-        show_next_topic(message, 1)  # show first topic
+        show_next_topic(message, 1)  # Показать первую тему
     else:
-        # determine the current topic from a message
+        # Определение текущей темы из сообщения
         topic_num = None
         for topic in basic:
             if message.text == topic:
-                topic_num = int(topic.split(" ")[1])  # extracting the topic number
+                topic_num = int(topic.split(" ")[1])  # Извлекаем номер темы
                 
         if topic_num:
             bot.send_message(message.chat.id, basic[f"Topic {topic_num}"], parse_mode="Markdown", reply_markup=hide_keyboard())
 
-            # if not the last topic, show the next button
+            # Если это не последняя тема, показываем кнопку следующей темы
             if topic_num < 11:
                 show_next_topic(message, topic_num + 1)
         else:
             bot.send_message(message.chat.id, "Please select a valid topic.", reply_markup=hide_keyboard())
+# text message handler
+# @bot.message_handler(func=lambda message: True)
+# def send_topic(message):
+#     if message.text == "Start":
+#         bot.send_message(message.chat.id, basic["Start"], reply_markup=hide_keyboard())
+#         show_next_topic(message, 1)  # show first topic
+#     else:
+#         # determine the current topic from a message
+#         topic_num = None
+#         for topic in basic:
+#             if message.text == topic:
+#                 topic_num = int(topic.split(" ")[1])  # extracting the topic number
+                
+#         if topic_num:
+#             bot.send_message(message.chat.id, basic[f"Topic {topic_num}"], parse_mode="Markdown", reply_markup=hide_keyboard())
+
+#             # if not the last topic, show the next button
+#             if topic_num < 11:
+#                 show_next_topic(message, topic_num + 1)
+#         else:
+#             bot.send_message(message.chat.id, "Please select a valid topic.", reply_markup=hide_keyboard())
 
 # function to show next topic button
 def show_next_topic(message, next_topic_num):
@@ -678,5 +702,14 @@ def show_next_topic(message, next_topic_num):
     markup.add(next_topic_btn)
     
     bot.send_message(message.chat.id, f"Press the button for Topic {next_topic_num}.", reply_markup=markup)
+
+@bot.message_handler(commands=['info'])
+def info(message):
+    markup = markup = types.ReplyKeyboardMarkup()
+    btn_yes = types.KeyboardButton('Yes', url='https://travkaa0.github.io/chess-bot-info.github.io/')
+    btn_no = types.KeyboardButton('No', callback_data='no_info')
+    markup.row(btn_yes, btn_no)
+
+    bot.send_message(message.chat.id, "Do you want to get information about the use of my bot?", reply_markup=markup)
 
 bot.polling(non_stop=True)
