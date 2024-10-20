@@ -707,7 +707,7 @@ def show_next_topic(message, next_topic_num):
 @bot.message_handler(commands=['info'])
 def info(message):
     markup = types.InlineKeyboardMarkup()
-    btn_yes = types.InlineKeyboardButton(text='Yes', url='https://travkaa0.github.io/chess-bot-info.github.io/')
+    btn_yes = types.InlineKeyboardButton(text='Yes', url='https://travkaa0.github.io/PtK-info.github.io/')
     btn_no = types.InlineKeyboardButton(text='No', callback_data='no_info')
 
     markup.add(btn_yes, btn_no)
