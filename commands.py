@@ -3,7 +3,7 @@ from telebot import types
 import random
 
 # token
-bot = telebot.TeleBot('7821159484:AAHtVB82Ch2sL1HaUwmvb_7Nd5hyeDHWGbM')
+bot = telebot.TeleBot('TELEGRAM_BOT_TOKEN')
 
 @bot.message_handler(commands=['start'])
 def hello(message):
