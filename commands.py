@@ -172,27 +172,86 @@ def books(message):
 
 @bot.message_handler(commands=['games'])
 def games(message):
-    
     markup = types.InlineKeyboardMarkup()
     
     btn1 = types.InlineKeyboardButton('Magnus Carlsen', url='https://www.chess.com/games/magnus-carlsen')
     btn2 = types.InlineKeyboardButton('Bobby Fischer', url='https://www.chess.com/games/bobby-fischer')
     btn3 = types.InlineKeyboardButton('Emanuel Lasker', url='https://www.chess.com/games/emanuel-lasker')
     btn4 = types.InlineKeyboardButton('Garry Kasparov', url='https://www.chess.com/games/garry-kasparov')
+
+    next_button = types.InlineKeyboardButton('More', callback_data='show_more')
+
+    markup.row(btn1)
+    markup.row(btn2, btn3)
+    markup.row(btn4)
+    markup.row(next_button)
+
+    bot.send_message(message.chat.id, "Which grandmaster's game will you choose?", reply_markup=markup)
+
+# We process the click of the "More" button
+@bot.callback_query_handler(func=lambda call: call.data == 'show_more')
+def show_more_grandmasters(call):
+    markup = types.InlineKeyboardMarkup()
+
     btn5 = types.InlineKeyboardButton('José Raúl Capablanca', url='https://www.chess.com/games/jose-raul-capablanca')
     btn6 = types.InlineKeyboardButton('Mikhail Tal', url='https://www.chess.com/games/mikhail-tal')
     btn7 = types.InlineKeyboardButton('Hikaru Nakamura', url='https://www.chess.com/games/hikaru-nakamura')
     btn8 = types.InlineKeyboardButton('Paul Morphy', url='https://www.chess.com/games/paul-morphy')
     btn9 = types.InlineKeyboardButton('Mikhail Botvinnik', url='https://www.chess.com/games/mikhail-botvinnik')
+    back_button = types.InlineKeyboardButton('Back', callback_data='go_back')
+
+    markup.row(btn5, btn6)
+    markup.row(btn7)
+    markup.row(btn8, btn9)
+    markup.row(back_button)
+
+
+    # New message
+    bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Which grandmaster's game will you choose?", reply_markup=markup)
+
+# We process the click of the "Back" button
+@bot.callback_query_handler(func=lambda call: call.data == 'go_back')
+def go_back_to_first_grandmasters(call):
+    markup = types.InlineKeyboardMarkup()
+
+    # Первые 4 гроссмейстера
+    btn1 = types.InlineKeyboardButton('Magnus Carlsen', url='https://www.chess.com/games/magnus-carlsen')
+    btn2 = types.InlineKeyboardButton('Bobby Fischer', url='https://www.chess.com/games/bobby-fischer')
+    btn3 = types.InlineKeyboardButton('Emanuel Lasker', url='https://www.chess.com/games/emanuel-lasker')
+    btn4 = types.InlineKeyboardButton('Garry Kasparov', url='https://www.chess.com/games/garry-kasparov')
+
+    next_button = types.InlineKeyboardButton('More', callback_data='show_more')
 
     markup.row(btn1)
     markup.row(btn2, btn3)
     markup.row(btn4)
-    markup.row(btn5, btn6)
-    markup.row(btn7)
-    markup.row(btn8, btn9)
+    markup.row(next_button)
 
-    bot.send_message(message.chat.id, "Which grandmaster's game will you choose?", reply_markup=markup)
+    bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Which grandmaster's game will you choose?", reply_markup=markup)
+
+# @bot.message_handler(commands=['games'])
+# def games(message):
+    
+#     markup = types.InlineKeyboardMarkup()
+    
+#     btn1 = types.InlineKeyboardButton('Magnus Carlsen', url='https://www.chess.com/games/magnus-carlsen')
+#     btn2 = types.InlineKeyboardButton('Bobby Fischer', url='https://www.chess.com/games/bobby-fischer')
+#     btn3 = types.InlineKeyboardButton('Emanuel Lasker', url='https://www.chess.com/games/emanuel-lasker')
+#     btn4 = types.InlineKeyboardButton('Garry Kasparov', url='https://www.chess.com/games/garry-kasparov')
+#     btn5 = types.InlineKeyboardButton('José Raúl Capablanca', url='https://www.chess.com/games/jose-raul-capablanca')
+#     btn6 = types.InlineKeyboardButton('Mikhail Tal', url='https://www.chess.com/games/mikhail-tal')
+#     btn7 = types.InlineKeyboardButton('Hikaru Nakamura', url='https://www.chess.com/games/hikaru-nakamura')
+#     btn8 = types.InlineKeyboardButton('Paul Morphy', url='https://www.chess.com/games/paul-morphy')
+#     btn9 = types.InlineKeyboardButton('Mikhail Botvinnik', url='https://www.chess.com/games/mikhail-botvinnik')
+
+#     markup.row(btn1)
+#     markup.row(btn2, btn3)
+#     markup.row(btn4)
+#     markup.row(btn5, btn6)
+#     markup.row(btn7)
+#     markup.row(btn8, btn9)
+
+#     bot.send_message(message.chat.id, "Which grandmaster's game will you choose?", reply_markup=markup)
 
 chess_history = {
     "6th Century": [
