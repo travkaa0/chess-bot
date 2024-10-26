@@ -782,7 +782,7 @@ def update_topic(message, topic_num):
 @bot.message_handler(commands=['info'])
 def info(message):
     markup = types.InlineKeyboardMarkup()
-    btn_yes = types.InlineKeyboardButton(text='Yes', url='https://travkaa0.github.io/PtK-info.github.io/')
+    btn_yes = types.InlineKeyboardButton(text='Yes', url='https://ptk-info.netlify.app/')
     btn_no = types.InlineKeyboardButton(text='No', callback_data='no_info')
 
     markup.add(btn_yes, btn_no)
